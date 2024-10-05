@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuidora Los Primos</title>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li>
+                <a href="#">Productos</a>
+            </li>
+
+            <li>
+                <a href="{% url 'login' %}">Ingresar</a>
+            </li>
+
+            <li>
+                <a href="{% url 'register' %}">Registrarme</a>
+            </li>
+        </ul>
+    </nav>
+
+
+
+{% block content %}
+    
+{% endblock content %}
+    
+<!-- <h1>footer</h1> -->
+
+
+</body>
+</html>
