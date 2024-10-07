@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import Product
 
 
 def landing_page(req):
-    return HttpResponse("landin page")
+    prod = Product.objects.all()
+    return render(req, "home.html", {"prod": prod})
 
 
 def home(req):
