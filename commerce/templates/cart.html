@@ -1,0 +1,42 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+
+<main class="container py-2">
+    <h2>Tu Carrito</h2>
+
+    {% if cart_items %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.product.nombre }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.product.precio }}</td>
+                    <td>${{ item.get_total_price }}</td>
+                    <td>
+                        <a href="{% url 'decrementar' item.id %}" class="btn btn-sm btn-warning">-</a>
+                        <a href="{% url 'incrementar' item.id %}" class="btn btn-sm btn-success">+</a>
+                        <a href="{% url 'remove' item.id %}" class="btn btn-sm btn-danger">x</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>Total: ${{ cart.get_total_cost }}</h3>
+        <a href="#" class="btn btn-primary">Proceder al Pago</a>
+    {% else %}
+        <p>Tu carrito está vacío.</p>
+    {% endif %}
+</main>
+
+{% endblock content %}
