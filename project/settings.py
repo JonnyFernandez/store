@@ -8,7 +8,6 @@ import cloudinary.api
 # valiable de entrono imports
 from decouple import config
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,13 +16,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-(8^=y&)=_63b%#*#%30)tz35=-_k5x(53@&&g=$89j5i^$uylb"
+SECRET_KEY = "django-insecure-%^b77@a6sg3#kem&y%fh$@lg7*t1+4l4=-*c8d)^)z%bs5c&)1"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -35,8 +33,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "commerce",
     "user",
+    "app",
     "cloudinary_storage",
     "cloudinary",
 ]

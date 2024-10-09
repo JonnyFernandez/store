@@ -1,5 +1,4 @@
-{% extends 'layout/base.html' %}
-
+{% extends 'layout/base1.html' %}
 
 {% block content %}
 
@@ -8,16 +7,17 @@
     <section class="row">
         <div class="col-12 mb-3">BUSCAR</div>
 
-        {% for x in prod %}
-        <div class="col-md-4 mb-4"> <!-- Ajusta el tamaño de las columnas según sea necesario -->
+        {% for x in product %}
+        <div class="col-md-3 mb-4"> <!-- Ajusta el tamaño de las columnas según sea necesario -->
+           
             <div class="card h-100" style="width: 100%;">
-                <img src="{{ x.imagen.url }}" class="card-img-top" alt="{{ x.name }}">
+                <img src="{{ x.imagen.url }}" class="card-img-top" alt="{{ x.name }}" >
                 <div class="card-body">
-                    <h5 class="card-title">{{ x.nombre }}</h5>
-                    <p class="card-text">{{ x.description }}</p>
+                    <h5 class="card-title">{{ x.name }}</h5>
+                    <p class="card-text">{{ x.description|truncatechars:30 }}</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Precio: {{ x.precio }}</li>
+                    <li class="list-group-item">Precio: {{ x.price }}</li>
                     <li class="list-group-item">Stock: {{ x.stock }}</li>
                 </ul>
                 <div class="card-body">
@@ -29,10 +29,7 @@
         {% endfor %}
     </section>
 </main>
-
-
-
-
-
+    
 {% endblock content %}
-        
+    
+

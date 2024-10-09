@@ -7,10 +7,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError  # para menejar excepciones de la db
 from django.contrib.auth.decorators import login_required
+from .forms import UserProfileForm
 
 
 def signUp(request):
-    print(request.method)
+
+    if request.user.is_authenticated:
+        return redirect("home")
 
     if request.method == "GET":
         return render(request, "signup.html", {"form": UserCreationForm})
@@ -22,10 +25,8 @@ def signUp(request):
                     password=request.POST["password1"],
                 )
                 user.save()
-                login(
-                    request, user
-                )  # esto es bueenisimo para crear cookies y persistencia de datos "tiene expiracion"
-                return redirect("home")
+                login(request, user)
+                return redirect("add_info")
             except IntegrityError:
                 return render(
                     request,
@@ -40,6 +41,10 @@ def signUp(request):
 
 
 def signIn(request):
+
+    if request.user.is_authenticated:
+        return redirect("home")
+
     if request.method == "GET":
         return render(request, "signin.html", {"form": AuthenticationForm})
     else:
@@ -63,6 +68,25 @@ def signIn(request):
 
 
 @login_required
+def add_info(request):
+
+    # if request.user.is_authenticated:
+    #     return redirect("home")
+
+    print(request.method)
+    if request.method == "POST":
+        form = UserProfileForm(request.POST)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user  # Asocia el perfil con el usuario actual
+            profile.save()
+            return redirect("home")  # Redirige a la página que prefieras
+    else:
+        form = UserProfileForm()
+    return render(request, "add_info.html", {"form": form})
+
+
+@login_required
 def signOut(request):
     logout(request)
-    return redirect("landing")
+    return redirect("home")

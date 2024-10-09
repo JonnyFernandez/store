@@ -1,9 +1,20 @@
-{% extends 'layout/base.html' %}
+{% extends 'layout/base1.html' %}
 
 {% block content %}
 
 <main class="container py-2">
     <h2>Tu Carrito</h2>
+    <div class="user-info mb-4">
+        <h4>Información del Cliente</h4>
+        <p><strong>Nombre:</strong> {{ request.user.username }}</p>
+        {% if user_profile %}
+            <p><strong>Email:</strong> {{ user_profile.email }}</p>
+            <p><strong>Teléfono:</strong> {{ user_profile.tel }}</p>
+            <p><strong>Dirección:</strong> {{ user_profile.addres }}</p>
+        {% else %}
+            <p>El perfil del usuario no está disponible.</p>
+        {% endif %}
+    </div>
 
     {% if cart_items %}
         <table class="table">
@@ -19,9 +30,9 @@
             <tbody>
                 {% for item in cart_items %}
                 <tr>
-                    <td>{{ item.product.nombre }}</td>
+                    <td>{{ item.product.name }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>${{ item.product.precio }}</td>
+                    <td>${{ item.product.price }}</td>
                     <td>${{ item.get_total_price }}</td>
                     <td>
                         <a href="{% url 'decrementar' item.id %}" class="btn btn-sm btn-warning">-</a>
@@ -32,8 +43,8 @@
                 {% endfor %}
             </tbody>
         </table>
-        <h3>Total: ${{ cart.get_total_cost }}</h3>
-        <a href="#" class="btn btn-primary">Proceder al Pago</a>
+        <h3>Total: ${{ total_cost }}</h3>
+        <a href="#" class="btn btn-primary">Generar pedido</a>
     {% else %}
         <p>Tu carrito está vacío.</p>
     {% endif %}
