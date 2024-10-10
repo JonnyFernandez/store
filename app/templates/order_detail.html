@@ -1,0 +1,45 @@
+{% extends 'layout/base1.html' %}
+
+
+{% block content %}
+
+<main class="container py-2">
+    <h2>Detalle de la Orden #{{ order.id }}</h2>
+
+<h4>Información del Cliente</h4>
+<p><strong>Nombre:</strong> {{ user_profile.user.username }}</p>
+<p><strong>Email:</strong> {{ user_profile.email }}</p>
+<p><strong>Teléfono:</strong> {{ user_profile.tel }}</p>
+<p><strong>Dirección:</strong> {{ user_profile.addres }}</p>
+
+<h4>Productos</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.price }}</td>
+            <td>${{ item.get_total_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h4>Total: ${{ order.total_price }}</h4>
+
+<div class="btn btn-primary">Descargar PDF</div>
+
+   
+</main>
+
+{% endblock content %}
+    

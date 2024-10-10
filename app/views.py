@@ -98,7 +98,7 @@ def create_order(request):
     # Obtener el perfil del usuario
     user_profile = get_object_or_404(UserProfile, user=user)
 
-    # Crear una nueva orden con la información del perfil del usuario
+    # Crear la orden
     order = Order.objects.create(
         user=user,
         total_price=cart.get_total_cost(),
@@ -107,24 +107,70 @@ def create_order(request):
         address=user_profile.addres,
     )
 
-    # Transferir los productos del carrito a la orden
-    for cart_item in cart.items.all():
+    # Transferir los productos del CartItem a OrderItem
+    for (
+        cart_item
+    ) in (
+        cart.cartitem_set.all()
+    ):  # Cambiado de cart.items.all() a cart.cartitem_set.all()
         OrderItem.objects.create(
             order=order,
-            product=cart_item.product,
-            quantity=cart_item.quantity,
-            price=cart_item.product.price,  # Guardar el precio actual del producto
+            product=cart_item.product,  # Acceder al producto desde CartItem
+            quantity=cart_item.quantity,  # Cantidad en CartItem
+            price=cart_item.product.price,  # Precio actual del producto
         )
 
-    # Vaciar el carrito si es necesario (opcional)
+    # Vaciar el carrito (opcional)
     cart.items.clear()
 
-    # Redirigir o devolver una respuesta
-    return redirect("order_detail", order_id=order.id)
+    return redirect("purchases")
+
+
+def purchases(request):
+    # Intentar obtener el perfil del usuario
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        user_profile = None  # Maneja el caso en que el perfil no existe
+    all_order = Order.objects.filter(user=request.user)
+    if not all_order:
+        res = "No Tienes Ordenes de compra registradas"
+        return render(
+            request, "purchase.html", {"user_profile": user_profile, "error": res}
+        )
+    else:
+        return render(
+            request,
+            "purchase.html",
+            {
+                "orders": all_order,
+                "user_profile": user_profile,
+            },
+        )
 
 
 def order_detail(request, order_id):
-    return HttpResponse(order_id)
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        user_profile = None  # Maneja el caso en que el perfil no existe
+        print(user_profile)
+
+    # Obtener la orden solicitada
+    order_detail = get_object_or_404(Order, pk=order_id, user=request.user)
+
+    # Obtener los items de la orden (relacionados a través de OrderItem)
+    order_items = OrderItem.objects.filter(order=order_detail).select_related("product")
+
+    return render(
+        request,
+        "order_detail.html",
+        {
+            "order": order_detail,
+            "order_items": order_items,  # Incluir los productos en la orden
+            "user_profile": user_profile,
+        },
+    )
 
 
 def card_detail(req, prod_id):

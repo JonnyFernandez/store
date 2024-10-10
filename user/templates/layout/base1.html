@@ -43,7 +43,7 @@
                          <a class="nav-link active" aria-current="page" href="#">Contacto</a>
                      </li>
                      <li class="nav-item">
-                         <a class="nav-link active" aria-current="page" href="#">Mis Compras</a>
+                         <a class="nav-link active" aria-current="page" href="{% url 'purchases' %}">Mis Compras</a>
                      </li>
                      <li class="nav-item">
                          <a class="nav-link active" aria-current="page" href="{% url 'cart' %}">Carrito</a>
@@ -54,8 +54,14 @@
                          <a class="nav-link active" aria-current="page" href="{% url 'logOut' %}">Salir</a>
                      </li>
                     </ul>
-                        
-                    <span>Usuario: {{user.username}}</span>
+                     
+                    {% if user.is_superuser %}
+    <span class="badge bg-success p-3 text-white">Admin: {{ user.username }}</span>
+{% else %}
+    <span class="badge bg-success p-3 text-white">Cliente: {{ user.username }}</span>
+{% endif %}
+
+                           
 
 
             </div>

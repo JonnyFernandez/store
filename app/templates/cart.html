@@ -44,7 +44,7 @@
             </tbody>
         </table>
         <h3>Total: ${{ total_cost }}</h3>
-        <a href="#" class="btn btn-primary">Generar pedido</a>
+        <a href="{% url 'create_order' %}" class="btn btn-primary">Generar pedido</a>
     {% else %}
         <p>Tu carrito está vacío.</p>
     {% endif %}

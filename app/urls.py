@@ -9,6 +9,8 @@ from .views import (
     remove_cart_item,
     cart,
     landing_page,
+    create_order,
+    purchases,
 )
 
 urlpatterns = [
@@ -29,4 +31,6 @@ urlpatterns = [
         name="decrementar",
     ),
     path("remove_cart_item/<int:cart_item_id>", remove_cart_item, name="remove"),
+    path("create_order/", create_order, name="create_order"),
+    path("purchases/", purchases, name="purchases"),
 ]
