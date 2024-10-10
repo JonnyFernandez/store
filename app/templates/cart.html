@@ -47,6 +47,7 @@
         <a href="{% url 'create_order' %}" class="btn btn-primary">Generar pedido</a>
     {% else %}
         <p>Tu carrito está vacío.</p>
+        <p>{{error}}</p>
     {% endif %}
 </main>
 

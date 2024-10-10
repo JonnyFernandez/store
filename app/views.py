@@ -39,14 +39,12 @@ def add_to_cart(request, prod_id):
 def cart(request):
     if not request.user.is_authenticated:
         return redirect("login")
+    try:
+        cart = get_object_or_404(Cart, user=request.user)
+    except:
+        error = "Carrito Vacio"
+        return render(request, "cart.html", {"error": error})
 
-    # Obtener el carrito del usuario
-    cart = get_object_or_404(Cart, user=request.user)
-
-    if not cart:
-        return redirect("home")
-
-    # Intentar obtener el perfil del usuario
     try:
         user_profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
