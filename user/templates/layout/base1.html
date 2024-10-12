@@ -29,13 +29,13 @@
                     </li>                     
                      {% if user.is_superuser %}
                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Ordenes pendientes</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'orders_pending' %}">Ordenes pendientes</a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Ordenes Despachadas</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'orders_dispatch' %}">Ordenes Despachadas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Agregar Producto</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'add_product' %}">Agregar Producto</a>
                     </li>                  
 
                      {% else %}

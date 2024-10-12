@@ -11,6 +11,15 @@ from .views import (
     landing_page,
     create_order,
     purchases,
+    # admin
+    orders_pending,
+    orders_dispatch,
+    orders_detail,
+    add_product,
+    order_detail_admin,
+    product_detail_admin,
+    delete_prod,
+    aproff_order,
 )
 
 urlpatterns = [
@@ -33,4 +42,21 @@ urlpatterns = [
     path("remove_cart_item/<int:cart_item_id>", remove_cart_item, name="remove"),
     path("create_order/", create_order, name="create_order"),
     path("purchases/", purchases, name="purchases"),
+    # admin
+    path(
+        "order_detail_admin/<int:order_id>",
+        order_detail_admin,
+        name="order_detail_admin",
+    ),
+    path("orders_pending/", orders_pending, name="orders_pending"),
+    path("orders_dispatch/", orders_dispatch, name="orders_dispatch"),
+    path("orders_detail/<int:order_id>", orders_detail, name="orders_detail"),
+    path("add_product/", add_product, name="add_product"),
+    path(
+        "product_detail_admin/<int:prod_id>",
+        product_detail_admin,
+        name="product_detail_admin",
+    ),
+    path("delete_prod/<int:prod_id>", delete_prod, name="delete_prod"),
+    path("aproff_order/<int:order_id>", aproff_order, name="aproff_order"),
 ]

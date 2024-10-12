@@ -1,0 +1,57 @@
+{% extends 'layout/base1.html' %}
+
+{% block content %}
+
+<main class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="text-secondary text-center">{{ prod.name }}</h1>
+            <div class="card mb-5">
+                <div class="row g-0">
+                    <!-- Si el producto tiene una imagen, la mostramos -->
+                    {% if prod.imagen %}
+                    <div class="col-md-4">
+                        <img src="{{ prod.imagen.url }}" class="img-fluid rounded-start" alt="{{ prod.name }}">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ prod.name }}</h5>
+                            <p class="card-text"><strong>Descripción:</strong> {{ prod.description }}</p>
+                            <p class="card-text"><strong>Precio:</strong> ${{ prod.price }}</p>
+                            <p class="card-text"><strong>Stock:</strong> {{ prod.stock }} unidades</p>
+                            <p class="card-text"><strong>Categoría:</strong> {{ prod.category.name }}</p>
+                            <p class="card-text"><strong>Oferta:</strong> {% if prod.offer %}Sí{% else %}No{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mostrar mensajes de error -->
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Formulario para actualizar el producto -->
+            <form action="{% url 'product_detail_admin' prod.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="border p-4 rounded">
+                    <legend class="text-secondary">Actualizar Producto</legend>
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary btn-block mt-3">Guardar Cambios</button>
+                </fieldset>
+            </form>
+
+            <!-- Formulario para eliminar el producto -->
+            <form action="{% url 'delete_prod' prod.id %}" method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block">Eliminar Producto</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

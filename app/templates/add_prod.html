@@ -1,0 +1,57 @@
+{% extends 'layout/base1.html' %}
+
+{% block content %}
+<main class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10">
+            <div class="row">
+                <!-- Formulario de Agregar Producto -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title text-center mb-4">Agregar Producto</h2>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    {{ form.as_p }} <!-- Formulario de producto -->
+                                </div>
+                                {% if error %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endif %}
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-block">Agregar Producto</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario de Agregar Categoría -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title text-center mb-4">Agregar Categoría</h2>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    {{ form2.as_p }} <!-- Formulario de categoría -->
+                                </div>
+                                {% if error %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endif %}
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-secondary btn-block">Agregar Categoría</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Cierre de row -->
+        </div> <!-- Cierre de col-md-10 -->
+    </div> <!-- Cierre de row -->
+</main>
+{% endblock %}

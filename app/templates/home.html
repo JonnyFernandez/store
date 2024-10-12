@@ -17,12 +17,20 @@
                     <p class="card-text">{{ x.description|truncatechars:30 }}</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Precio: {{ x.price }}</li>
+                    <li class="list-group-item">Precio: ${{ x.price }}</li>
                     <li class="list-group-item">Stock: {{ x.stock }}</li>
                 </ul>
-                <div class="card-body">
+                <div class="card-body d-flex justify-content-center ">
+                    
+                    
+                    {% if user.is_superuser %}
+                        <a href="{% url 'product_detail_admin' x.id %}" class="btn btn-secondary">Editar</a>
+                    {% else %}
                     <a href="{% url 'card_detail' x.id %}" class="card-link">Ver detalles</a>
                     <a href="{% url 'add_to_cart' x.id %}" class="card-link">Agregar al carrito</a>
+
+                    {% endif %}
+                        
                 </div>
             </div>
         </div>

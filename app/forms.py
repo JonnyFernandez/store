@@ -11,9 +11,22 @@ class PostForm(forms.ModelForm):
             "imagen",
             "price",
             "stock",
-            "offer",
             "category",
+            "offer",
         ]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "ingresa name"}
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "ingresa descripción",
+                    "rows": 3,  # Número de filas
+                    "cols": 40,  # Número de columnas (ancho)
+                }
+            ),
+        }
 
 
 class CategoryForm(forms.ModelForm):

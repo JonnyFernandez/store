@@ -1,0 +1,52 @@
+{% extends 'layout/base1.html' %}
+
+
+{% block content %}
+
+<main class="container py-2">
+    <h2>Ordenes de Compra</h2>
+    <div class="user-info mb-4">
+        <h4>Información del Administrador</h4>
+        <p><strong>Nombre:</strong> {{ request.user.username }}</p>
+       
+    </div>
+
+    {% if orders %}
+    <section class="row">
+        <!-- <div class="col-12 mb-3">BUSCAR</div> -->
+
+        {% for x in orders %}
+        <div class="col-md-3 mb-4"> <!-- Ajusta el tamaño de las columnas según sea necesario -->
+           
+            <div class="card h-100" style="width: 100%;">
+               
+                <div class="card-body">
+                    
+                    {% if x.is_pending %}
+                    <h5 class="card-title text-warning bg-light p-3 rounded">Estado: Pendiente</h5>
+                    {% else %}
+                    <h5 class="card-title text-success bg-light p-3 rounded">Estado: Despachado</h5>
+                    {% endif %}            
+                        
+                    
+                    <p class="card-text">{{ x.description|truncatechars:30 }}</p>
+                </div>
+                <ul class="list-group list-group-flush">                   
+                    <li class="list-group-item">Codigo de orden: {{ x.id }}</li>
+                    <li class="list-group-item">Monto Total: ${{ x.total_price }}</li>
+                    <li class="list-group-item">Fecha de Creación: {{ x.created_at|date:'M j Y:i' }}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="{% url 'order_detail_admin' x.id %}" class="card-link btn btn-primary w-100">Ver detalles</a>                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+    {% else %}
+        <p>No se han generado ordenes de compra.</p>
+    {% endif %}
+</main>
+
+{% endblock content %}
+    

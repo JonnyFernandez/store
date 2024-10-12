@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from user.models import UserProfile
 from .models import AppProduct, Order, OrderItem, Cart, CartItem
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+from .forms import PostForm, CategoryForm
 
 
 # ------------------Home-----------------
@@ -178,4 +178,139 @@ def card_detail(req, prod_id):
 
 def landing_page(req):
     prod = AppProduct.objects.filter(offer=True)
-    return render(req, "home.html", {"product": prod})
+    return render(req, "landing.html", {"product": prod})
+
+
+# -----------------------------------------------admin---------------------------------------
+
+
+def orders_pending(request):
+    orders = Order.objects.filter(is_pending=True)
+    return render(request, "orders_admin.html", {"orders": orders})
+
+
+def order_detail_admin(request, order_id):
+    # Obtener la orden solicitada
+    order_detail = get_object_or_404(Order, pk=order_id)
+
+    # Acceder directamente al usuario desde la orden
+    user = order_detail.user
+
+    # Obtener el perfil del usuario
+    user_profile = UserProfile.objects.get(
+        user=user
+    )  # user ya es una instancia del modelo User
+
+    print(user)
+
+    # Obtener los ítems de la orden
+    order_items = OrderItem.objects.filter(order=order_detail).select_related("product")
+
+    return render(
+        request,
+        "order_detail.html",
+        {
+            "order": order_detail,
+            "order_items": order_items,  # Incluir los productos en la orden
+            "user_profile": user_profile,  # Agregar el perfil del usuario al contexto
+        },
+    )
+
+
+def orders_dispatch(request):
+    orders = Order.objects.filter(is_pending=False)
+    return render(request, "orders_admin.html", {"orders": orders})
+
+
+def orders_detail(request):
+    pass
+
+
+def add_product(request):
+    if request.method == "GET":
+        return render(
+            request,
+            "add_prod.html",
+            {
+                "form": PostForm(),  # Formulario de producto
+                "form2": CategoryForm(),  # Formulario de categoría
+            },
+        )
+    else:
+        form = PostForm(request.POST, request.FILES)
+        form2 = CategoryForm(request.POST)
+
+        product_saved = False
+        category_saved = False
+
+        # Si el formulario de producto es válido, guarda el producto
+        if form.is_valid():
+            new_prod = form.save(commit=False)
+            new_prod.user = (
+                request.user
+            )  # Asigna el usuario que está creando el producto
+            new_prod.save()
+            product_saved = True
+
+        # Si el formulario de categoría es válido, guarda la categoría
+        if form2.is_valid():
+            new_category = form2.save()
+            category_saved = True
+
+        # Redirigir si al menos uno de los formularios fue guardado
+        if product_saved:
+            return redirect("home")
+        elif category_saved:
+            return redirect("add_product")
+        else:
+            return redirect("add_product")
+
+        # Si ninguno fue guardado, se devuelven los formularios con los errores correspondientes
+        return render(
+            request,
+            "add_prod.html",
+            {
+                "form": form,
+                "form2": form2,
+                "error": "Ingresar datos válidos en el formulario correspondiente.",
+            },
+        )
+
+
+def product_detail_admin(request, prod_id):
+    prod = get_object_or_404(AppProduct, pk=prod_id)
+
+    if request.method == "GET":
+        form = PostForm(instance=prod)
+        return render(request, "prod_detail_admin.html", {"prod": prod, "form": form})
+
+    else:
+        form = PostForm(request.POST, request.FILES, instance=prod)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+        else:
+            return render(
+                request,
+                "prod_detail_admin.html",
+                {"prod": prod, "form": form, "error": "Error en la actualización"},
+            )
+
+
+def delete_prod(request, prod_id):
+    prod = get_object_or_404(AppProduct, pk=prod_id)
+
+    if request.method == "POST":
+        prod.delete()
+        return redirect("home")
+
+
+def aproff_order(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+
+    if request.method == "POST":
+        order.is_pending = False
+        order.save()  # Guardar los cambios en la base de datos
+        return redirect("orders_dispatch")
+
+    return render(request, "order_detail.html", {"order": order})
