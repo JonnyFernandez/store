@@ -314,3 +314,15 @@ def aproff_order(request, order_id):
         return redirect("orders_dispatch")
 
     return render(request, "order_detail.html", {"order": order})
+
+
+def delete_order(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+
+    if request.method == "POST":
+        order.delete()
+        return redirect("orders_pending")
+
+
+def about(request):
+    return render(request, "about.html", {})

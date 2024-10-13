@@ -20,6 +20,7 @@ from .views import (
     product_detail_admin,
     delete_prod,
     aproff_order,
+    delete_order,
 )
 
 urlpatterns = [
@@ -59,4 +60,5 @@ urlpatterns = [
     ),
     path("delete_prod/<int:prod_id>", delete_prod, name="delete_prod"),
     path("aproff_order/<int:order_id>", aproff_order, name="aproff_order"),
+    path("delete_order/<int:order_id>", delete_order, name="delete_order"),
 ]
