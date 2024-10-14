@@ -5,6 +5,10 @@ from .models import AppProduct, Order, OrderItem, Cart, CartItem
 from django.http import HttpResponse
 from .forms import PostForm, CategoryForm
 
+# para envio de reseñas al email
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 # ------------------Home-----------------
 def home(request):
@@ -179,6 +183,26 @@ def card_detail(req, prod_id):
 def landing_page(req):
     prod = AppProduct.objects.filter(offer=True)
     return render(req, "landing.html", {"product": prod})
+
+
+def contact_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+
+        # Enviar correo
+        send_mail(
+            subject=f"Consulta de {email}",  # Asunto del correo
+            message=message,  # Cuerpo del mensaje
+            from_email=settings.DEFAULT_FROM_EMAIL,  # Remitente
+            recipient_list=[
+                "arcancode@gmail.com"
+            ],  # Tu correo donde recibirás las consultas
+            fail_silently=False,  # No fallar en silencio
+        )
+        return redirect("home")  # Redirigir a una página de agradecimiento
+
+    return render(request, "home.html")
 
 
 # -----------------------------------------------admin---------------------------------------

@@ -115,7 +115,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -129,3 +133,13 @@ cloudinary.config(
     api_key=config("CLOUDINARY_API_KEY"),
     api_secret=config("CLOUDINARY_API_SECRET"),
 )
+
+
+# Configuración de correo en settings.py para usar Gmail
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"  # El servidor SMTP de Gmail
+EMAIL_PORT = 587  # El puerto estándar de Gmail para SMTP
+EMAIL_USE_TLS = True  # Gmail requiere TLS para una conexión segura
+EMAIL_HOST_USER = config("USER_Gmail")  # Tu correo electrónico
+EMAIL_HOST_PASSWORD = config("PASS_Gmail")
+DEFAULT_FROM_EMAIL = config("USER_Gmail")  # El remitente predeterminado

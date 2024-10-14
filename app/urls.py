@@ -21,6 +21,8 @@ from .views import (
     delete_prod,
     aproff_order,
     delete_order,
+    about,
+    contact_view,
 )
 
 urlpatterns = [
@@ -61,4 +63,6 @@ urlpatterns = [
     path("delete_prod/<int:prod_id>", delete_prod, name="delete_prod"),
     path("aproff_order/<int:order_id>", aproff_order, name="aproff_order"),
     path("delete_order/<int:order_id>", delete_order, name="delete_order"),
+    path("about/", about, name="about"),
+    path("contact_view/", contact_view, name="contact_view"),
 ]
