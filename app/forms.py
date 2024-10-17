@@ -36,7 +36,24 @@ class CategoryForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    title = forms.CharField(max_length=100, required=False)
+    name = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Nombre del producto",
+                "style": "margin-left: 10px;",
+            }
+        ),
+    )
     category = forms.ModelChoiceField(
-        queryset=AppCategory.objects.all(), required=False
+        queryset=AppCategory.objects.all(),
+        required=False,
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "style": "margin-right: 10px;",
+            }
+        ),
     )

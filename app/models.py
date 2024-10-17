@@ -19,7 +19,18 @@ class AppCategory(models.Model):
 class AppProduct(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    imagen = CloudinaryField("image", blank=True, null=True)
+    imagen = CloudinaryField(
+        "image",
+        blank=True,
+        null=True,
+        transformation={
+            "width": 400,  # Ancho deseado
+            "height": 400,  # Alto deseado
+            "crop": "fill",  # Recortar y rellenar para que se ajuste al tamaño
+            "gravity": "auto",  # Enfocar en la parte más importante de la imagen
+        },
+    )
+
     price = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)], default=1
     )

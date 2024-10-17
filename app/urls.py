@@ -14,7 +14,6 @@ from .views import (
     # admin
     orders_pending,
     orders_dispatch,
-    orders_detail,
     add_product,
     order_detail_admin,
     product_detail_admin,
@@ -23,6 +22,7 @@ from .views import (
     delete_order,
     about,
     contact_view,
+    add_category,
 )
 
 urlpatterns = [
@@ -53,7 +53,7 @@ urlpatterns = [
     ),
     path("orders_pending/", orders_pending, name="orders_pending"),
     path("orders_dispatch/", orders_dispatch, name="orders_dispatch"),
-    path("orders_detail/<int:order_id>", orders_detail, name="orders_detail"),
+    # path("orders_detail/<int:order_id>", orders_detail, name="orders_detail"),
     path("add_product/", add_product, name="add_product"),
     path(
         "product_detail_admin/<int:prod_id>",
@@ -65,4 +65,5 @@ urlpatterns = [
     path("delete_order/<int:order_id>", delete_order, name="delete_order"),
     path("about/", about, name="about"),
     path("contact_view/", contact_view, name="contact_view"),
+    path("add_category/", add_category, name="add_category"),
 ]

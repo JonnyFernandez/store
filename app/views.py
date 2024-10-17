@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from user.models import UserProfile
 from .models import AppProduct, Order, OrderItem, Cart, CartItem
 from django.http import HttpResponse
-from .forms import PostForm, CategoryForm
+from .forms import PostForm, CategoryForm, SearchForm
 
 # para envio de reseñas al email
 from django.core.mail import send_mail
@@ -13,7 +13,27 @@ from django.conf import settings
 # ------------------Home-----------------
 def home(request):
     product = AppProduct.objects.all()
-    return render(request, "home.html", {"product": product})
+
+    # Verificar si hay una búsqueda
+    search_form = SearchForm(request.GET or None)
+
+    if search_form.is_valid():
+        name = search_form.cleaned_data.get("name")
+        category = search_form.cleaned_data.get("category")
+
+        # Filtrar por nombre
+        if name:
+            product = product.filter(name__icontains=name)
+            if len(product) == 0:
+                product = AppProduct.objects.all()
+
+        # Filtrar por categoría
+        if category:
+            product = product.filter(category=category)
+
+    return render(
+        request, "home.html", {"product": product, "search_form": search_form}
+    )
 
 
 def add_to_cart(request, prod_id):
@@ -129,7 +149,8 @@ def create_order(request):
 
 
 def purchases(request):
-    # Intentar obtener el perfil del usuario
+    if not request.user.is_authenticated:
+        return redirect("login")
     try:
         user_profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
@@ -185,19 +206,35 @@ def landing_page(req):
     return render(req, "landing.html", {"product": prod})
 
 
+from django.core.mail import send_mail
+from django.conf import settings
+from django.shortcuts import render, redirect
+
+
 def contact_view(request):
     if request.method == "POST":
         email = request.POST.get("email")
         message = request.POST.get("message")
 
+        # Personalizar el mensaje
+        custom_message = f"""
+        ¡Hola! Has recibido una nueva consulta desde tu sitio web.
+
+        Detalles de la consulta:
+        ------------------------
+        Correo del cliente: {email}
+        Mensaje:
+        {message}
+
+        Responde directamente a este correo para ponerte en contacto con el cliente.
+        """
+
         # Enviar correo
         send_mail(
             subject=f"Consulta de {email}",  # Asunto del correo
-            message=message,  # Cuerpo del mensaje
+            message=custom_message,  # Mensaje personalizado
             from_email=settings.DEFAULT_FROM_EMAIL,  # Remitente
-            recipient_list=[
-                "arcancode@gmail.com"
-            ],  # Tu correo donde recibirás las consultas
+            recipient_list=["arcancode@gmail.com"],  # Tu correo
             fail_silently=False,  # No fallar en silencio
         )
         return redirect("home")  # Redirigir a una página de agradecimiento
@@ -205,7 +242,7 @@ def contact_view(request):
     return render(request, "home.html")
 
 
-# -----------------------------------------------admin---------------------------------------
+# --------------------------------------------------- a d m i n ---------------------------------------------
 
 
 def orders_pending(request):
@@ -244,10 +281,6 @@ def order_detail_admin(request, order_id):
 def orders_dispatch(request):
     orders = Order.objects.filter(is_pending=False)
     return render(request, "orders_admin.html", {"orders": orders})
-
-
-def orders_detail(request):
-    pass
 
 
 def add_product(request):
@@ -301,6 +334,34 @@ def add_product(request):
         )
 
 
+def add_category(request):
+    if request.method == "POST":
+        form2 = CategoryForm(request.POST)
+        if form2.is_valid():
+            form2.save()
+            return redirect(
+                "add_category"
+            )  # Redirigir si la categoría se guarda correctamente
+        else:
+            return render(
+                request,
+                "add_category.html",
+                {
+                    "form2": form2,
+                    "error": "Ingresar datos válidos en el formulario correspondiente.",
+                },
+            )
+    else:
+        # Mostrar el formulario vacío cuando el método es GET
+        return render(
+            request,
+            "add_category.html",
+            {
+                "form2": CategoryForm(),
+            },
+        )
+
+
 def product_detail_admin(request, prod_id):
     prod = get_object_or_404(AppProduct, pk=prod_id)
 
@@ -330,11 +391,34 @@ def delete_prod(request, prod_id):
 
 
 def aproff_order(request, order_id):
+    # Obtenemos la orden específica
     order = get_object_or_404(Order, pk=order_id)
 
     if request.method == "POST":
+        # Cambiamos el estado de la orden a "no pendiente"
         order.is_pending = False
-        order.save()  # Guardar los cambios en la base de datos
+        order.save()
+
+        # Iteramos sobre los productos en la orden y actualizamos el stock
+        order_items = OrderItem.objects.filter(order=order)
+        for item in order_items:
+            product = item.product
+            # Restamos la cantidad pedida del stock
+            if product.stock >= item.quantity:
+                product.stock -= item.quantity
+                product.save()  # Guardamos los cambios en el producto
+            else:
+                # Si no hay suficiente stock, podrías manejar un mensaje de error
+                return render(
+                    request,
+                    "order_detail.html",
+                    {
+                        "order": order,
+                        "error": f"No hay suficiente stock para {product.name}",
+                    },
+                )
+
+        # Redirigir a una página de éxito o a la lista de órdenes
         return redirect("orders_dispatch")
 
     return render(request, "order_detail.html", {"order": order})

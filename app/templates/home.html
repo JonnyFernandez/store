@@ -5,35 +5,47 @@
 
 <main class="container py-2">
     <section class="row">
-        <div class="col-12 mb-3">BUSCAR</div>
+        <div class="search-bar">
+            <form method="GET" action="." class="form-inline d-flex" style="max-width: 600px; margin: 5 auto;">
+                {{ search_form.as_p }}
+                <button type="submit" class="btn btn-outline-primary custom-button m-4">Buscar</button>
+
+            </form>
+        </div>
+        
 
         {% for x in product %}
-        <div class="col-md-3 mb-4"> <!-- Ajusta el tamaño de las columnas según sea necesario -->
-           
+        <div class="col-md-3 mb-4">
             <div class="card h-100" style="width: 100%;">
-                <img src="{{ x.imagen.url }}" class="card-img-top" alt="{{ x.name }}" >
-                <div class="card-body">
-                    <h5 class="card-title">{{ x.name }}</h5>
-                    <p class="card-text">{{ x.description|truncatechars:30 }}</p>
+                <img src="{{ x.imagen.url }}" class="card-img-top" alt="{{ x.name }}">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title text-center">{{ x.name }}</h5>
+                        <p class="card-text text-center">{{ x.description|truncatechars:30 }}</p>
+                    </div>
+                    <ul class="list-group list-group-flush text-center">
+                        <li class="list-group-item">Precio: ${{ x.price }}</li>
+                        <li class="list-group-item">Stock: {{ x.stock }}</li>
+                    </ul>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Precio: ${{ x.price }}</li>
-                    <li class="list-group-item">Stock: {{ x.stock }}</li>
-                </ul>
-                <div class="card-body d-flex justify-content-center ">
-                    
-                    
+                <div class="card-footer d-flex justify-content-center">
                     {% if user.is_superuser %}
-                        <a href="{% url 'product_detail_admin' x.id %}" class="btn btn-secondary">Editar</a>
+                        <a href="{% url 'product_detail_admin' x.id %}" class="btn btn-secondary me-2">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
                     {% else %}
-                    <a href="{% url 'card_detail' x.id %}" class="card-link">Ver detalles</a>
-                    <a href="{% url 'add_to_cart' x.id %}" class="card-link">Agregar al carrito</a>
-
+                        <a href="{% url 'card_detail' x.id %}" class="btn btn-info me-2">
+                            <i class="fas fa-eye"></i> Ver detalles
+                        </a>
+                        <a href="{% url 'add_to_cart' x.id %}" class="btn btn-success">
+                            <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                        </a>
                     {% endif %}
-                        
                 </div>
+                
             </div>
         </div>
+        
         {% endfor %}
     </section>
 </main>

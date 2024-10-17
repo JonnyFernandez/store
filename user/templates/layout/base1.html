@@ -84,6 +84,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'add_product' %}">Agregar Producto</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_category' %}">Agregar Categoria</a>
+                    </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="#contacto">Contacto</a>
@@ -160,11 +163,11 @@
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="email" class="form-label">Tu Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <input type="email" class="form-control" id="email" name="email" required placeholder="Ingresa tu Email">
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Mensaje:</label>
-                            <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                            <textarea class="form-control" id="message" name="message" rows="3" required placeholder="Ingresa tu consulta aqui"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </form>
