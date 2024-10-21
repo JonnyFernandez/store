@@ -11,9 +11,7 @@
                 <button type="submit" class="btn btn-outline-primary custom-button m-4">Buscar</button>
 
             </form>
-        </div>
-        
-
+        </div>    
         {% for x in product %}
         <div class="col-md-3 mb-4">
             <div class="card h-100" style="width: 100%;">
@@ -35,10 +33,11 @@
                         </a>
                     {% else %}
                         <a href="{% url 'card_detail' x.id %}" class="btn btn-info me-2">
-                            <i class="fas fa-eye"></i> Ver detalles
+                            <i class="fas fa-eye">Ver detalles</i> 
                         </a>
                         <a href="{% url 'add_to_cart' x.id %}" class="btn btn-success">
-                            <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                            <i class="fas fa-shopping-cart">
+                                 Agregar al carrito</i> 
                         </a>
                     {% endif %}
                 </div>

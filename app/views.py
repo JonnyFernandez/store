@@ -9,6 +9,8 @@ from .forms import PostForm, CategoryForm, SearchForm
 from django.core.mail import send_mail
 from django.conf import settings
 
+from django.contrib.auth.decorators import login_required
+
 
 # ------------------Home-----------------
 def home(request):
@@ -205,12 +207,6 @@ def landing_page(req):
     prod = AppProduct.objects.filter(offer=True)
     return render(req, "landing.html", {"product": prod})
 
-
-from django.core.mail import send_mail
-from django.conf import settings
-from django.shortcuts import render, redirect
-
-
 def contact_view(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -244,12 +240,12 @@ def contact_view(request):
 
 # --------------------------------------------------- a d m i n ---------------------------------------------
 
-
+@login_required
 def orders_pending(request):
     orders = Order.objects.filter(is_pending=True)
     return render(request, "orders_admin.html", {"orders": orders})
 
-
+@login_required
 def order_detail_admin(request, order_id):
     # Obtener la orden solicitada
     order_detail = get_object_or_404(Order, pk=order_id)
@@ -277,12 +273,12 @@ def order_detail_admin(request, order_id):
         },
     )
 
-
+@login_required
 def orders_dispatch(request):
     orders = Order.objects.filter(is_pending=False)
     return render(request, "orders_admin.html", {"orders": orders})
 
-
+@login_required
 def add_product(request):
     if request.method == "GET":
         return render(
@@ -333,7 +329,7 @@ def add_product(request):
             },
         )
 
-
+@login_required
 def add_category(request):
     if request.method == "POST":
         form2 = CategoryForm(request.POST)
@@ -361,7 +357,7 @@ def add_category(request):
             },
         )
 
-
+@login_required
 def product_detail_admin(request, prod_id):
     prod = get_object_or_404(AppProduct, pk=prod_id)
 
@@ -381,7 +377,7 @@ def product_detail_admin(request, prod_id):
                 {"prod": prod, "form": form, "error": "Error en la actualización"},
             )
 
-
+@login_required
 def delete_prod(request, prod_id):
     prod = get_object_or_404(AppProduct, pk=prod_id)
 
@@ -389,7 +385,7 @@ def delete_prod(request, prod_id):
         prod.delete()
         return redirect("home")
 
-
+@login_required
 def aproff_order(request, order_id):
     # Obtenemos la orden específica
     order = get_object_or_404(Order, pk=order_id)
@@ -423,7 +419,7 @@ def aproff_order(request, order_id):
 
     return render(request, "order_detail.html", {"order": order})
 
-
+@login_required
 def delete_order(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
 

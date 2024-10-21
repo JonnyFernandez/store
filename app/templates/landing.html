@@ -1,22 +1,24 @@
-
-
 {% extends 'layout/base1.html' %}
 
 {% block content %}
-<main class="container my-5">
-    <h1 class="text-center mb-4">Productos en Oferta</h1>
+<main class="container my-5" style="min-height: 700px;">
+    <h1 class="text-center mb-4 display-4 text-primary">Productos en Oferta</h1>
     
     {% if product %}
         <div class="row">
             {% for item in product %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ item.imagen.url }}" class="card-img-top" alt="{{ item.name }}">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.name }}</h5>
-                        <p class="card-text">{{ item.description|truncatewords:20 }}</p>
-                        <p class="text-success fw-bold">${{ item.price }}</p>
-                        <a href="{% url 'card_detail' item.id %}" class="btn btn-primary">Ver Detalles</a>
+            <div class="col-md-4 mb-4 d-flex align-items-stretch">
+                <div class="card shadow-lg h-100">
+                    <img src="{{ item.imagen.url }}" class="card-img-top" alt="{{ item.name }}" style="object-fit: cover; height: 200px;">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="card-title text-center text-uppercase">{{ item.name }}</h5>
+                            <p class="card-text text-muted text-center">{{ item.description|truncatewords:20 }}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-success fw-bold h5 mb-3">${{ item.price }}</p>
+                            <a href="{% url 'card_detail' item.id %}" class="btn btn-outline-primary w-100">Ver Detalles</a>
+                        </div>
                     </div>
                 </div>
             </div>
